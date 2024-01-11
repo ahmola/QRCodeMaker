@@ -1,0 +1,26 @@
+qrcode:
+  path: /Users/park/Documents/study/QRCodeGenerator/src/main/resources/static/QRCode/
+
+server:
+  port: 9000
+
+logging:
+  level:
+    org:
+      springframework:
+        security: TRACE
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost/qrcode
+    username: "prac"
+    password: 1234
+    initialization-mode: always
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        show-sql: true
