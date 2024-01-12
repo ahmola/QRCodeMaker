@@ -1,17 +1,20 @@
 package dev.practice.QRCodeGenerator.model;
 
 import dev.practice.QRCodeGenerator.dto.CustomUserDTO;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.Collections;
 
 @NoArgsConstructor
 @Data
 @Entity(name = "user")
-public class CustomUser {
+public class CustomUser implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,12 +25,49 @@ public class CustomUser {
 
     private String email;
 
+    private String password;
+
     private String phoneNumber;
+
+    @Enumerated(value = EnumType.STRING)
+    private Role role;
 
     public CustomUser(CustomUserDTO customUserDTO){
         this.firstName = customUserDTO.getFirstName();
         this.lastName = customUserDTO.getLastName();
         this.email = customUserDTO.getEmail();
+        this.password = customUserDTO.getPassword();
         this.phoneNumber = customUserDTO.getPhoneNumber();
+        this.role = customUserDTO.getRole();
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Collections.singletonList(new SimpleGrantedAuthority(this.role.toString()));
+    }
+
+    @Override
+    public String getUsername() {
+        return this.firstName + " " + this.lastName;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

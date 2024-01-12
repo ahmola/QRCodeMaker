@@ -1,4 +1,4 @@
-package dev.practice.QRCodeGenerator.controller;
+package dev.practice.QRCodeGenerator.controller.api;
 
 import dev.practice.QRCodeGenerator.dto.CustomUserDTO;
 import dev.practice.QRCodeGenerator.model.CustomUser;
@@ -8,6 +8,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
@@ -15,22 +20,23 @@ import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
-@RequestMapping("/user")
+@RequestMapping("/api")
 @RestController
-public class UserController {
+public class ApiController {
 
+    private final AuthenticationManager authenticationManager;
     private final UserService userService;
 
     @GetMapping("/findall")
     public ResponseEntity<List<CustomUser>> findAll(){
-        log.info(UserController.class.getName() + " : start finding all Users");
+        log.info(ApiController.class.getName() + " : start finding all Users");
         return new ResponseEntity<>(userService.findAll(), HttpStatus.FOUND);
     }
 
     @GetMapping("/find/{name}")
     public ResponseEntity<List<CustomUser>> findUser(
-            @PathVariable(name = "name") String name){
-        log.info(UserController.class.getName() + " : start finding User " + name);
+            @PathVariable(name = "name") String name) throws Exception {
+        log.info(ApiController.class.getName() + " : start finding User " + name);
         return new ResponseEntity<>(userService.findByName(name), HttpStatus.FOUND);
     }
 
@@ -38,11 +44,11 @@ public class UserController {
     public ResponseEntity<String> addUser(
             @RequestBody CustomUserDTO customUserDTO) throws Exception {
 
-        log.info(UserController.class.getName() + " : start adding User " +
+        log.info(ApiController.class.getName() + " : start adding User " +
                 customUserDTO.getFirstName() + " " + customUserDTO.getLastName());
         CustomUser user = userService.addUser(customUserDTO);
 
-        log.info(UserController.class.getName() + " : start making QRCode of : " +
+        log.info(ApiController.class.getName() + " : start making QRCode of : " +
                 customUserDTO.getFirstName() + " " + customUserDTO.getLastName());
         QRCodeGenerator.generateQRCode(user);
 
@@ -50,4 +56,5 @@ public class UserController {
                 user + " is created at " + LocalDateTime.now(),
                 HttpStatus.CREATED);
     }
+
 }

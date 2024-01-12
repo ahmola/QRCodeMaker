@@ -17,4 +17,6 @@ public interface UserRepository extends JpaRepository<CustomUser, Long> {
     List<CustomUser> findByName(
             @Param(value = "firstName") String firstName,
             @Param(value = "lastName") String lastName);
+
+    List<CustomUser> findByEmail(String email);
 }

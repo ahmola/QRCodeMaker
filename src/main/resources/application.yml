@@ -4,11 +4,11 @@ qrcode:
 server:
   port: 9000
 
-logging:
-  level:
-    org:
-      springframework:
-        security: TRACE
+#logging:
+#  level:
+#    org:
+#      springframework:
+#        security: TRACE
 
 spring:
   datasource:
