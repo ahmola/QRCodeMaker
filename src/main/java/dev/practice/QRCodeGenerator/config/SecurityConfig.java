@@ -1,5 +1,6 @@
 package dev.practice.QRCodeGenerator.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,10 +15,19 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+    @Value("${qrcode.path}")
+    private String qrCodePath;
+
+    public void addResourceHandlers(ResourceHandlerRegistry registry){
+        registry.addResourceHandler("/user/qrcode/**")
+                .addResourceLocations(qrCodePath+"/");
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -35,8 +45,10 @@ public class SecurityConfig {
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception{
         http
                 .csrf().disable()
-                .authorizeHttpRequests(auth ->
-                        auth.anyRequest().authenticated())
+                .authorizeHttpRequests(auth ->{
+                        auth.requestMatchers("/api/**").permitAll();
+                        auth.anyRequest().authenticated();
+                })
                 .formLogin()
                 .usernameParameter("email")
                 .loginPage("/user/login")   // post request is also same as loginpage getmapping

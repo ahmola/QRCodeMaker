@@ -7,7 +7,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class LoginDTO {
-    private String email;
+public class QrCodeDTO {
+
+    private String username;
     private String password;
+    private String message;
+
 }

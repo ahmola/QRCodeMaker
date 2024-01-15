@@ -5,6 +5,7 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import dev.practice.QRCodeGenerator.model.CustomUser;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +13,7 @@ import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 
+@Slf4j
 @Component
 public class QRCodeGenerator {
 
@@ -22,21 +24,27 @@ public class QRCodeGenerator {
         qrCodePath = path;
     }
 
-    public static void generateQRCode(CustomUser customUser) throws Exception {
+    public static void generateQRCode(CustomUser customUser, String message) throws Exception {
         String qrCodeName = qrCodePath.hashCode() +
                 customUser.getFirstName() +
                 customUser.getId() +
+                message.hashCode() +
                 "-QRCODE.png";
 
         BitMatrix bitMatrix = new MultiFormatWriter().encode(
                 "ID: " + customUser.getId() + "\n" +
-                        "FirstName: " + customUser.getFirstName() + "\n" +
-                        "LastName: " + customUser.getLastName() + "\n" +
-                        "PhoneNumber: " + customUser.getPhoneNumber() + "\n",
+                        "Name: " + customUser.getFirstName() + " " + customUser.getLastName() + "\n" +
+                        "PhoneNumber: " + customUser.getPhoneNumber() + "\n" +
+                        "E-mail: " + customUser.getEmail() + "\n" +
+                        "Role : " + customUser.getAuthorities() + "\n\n" +
+                        "Message : " + message,
                 BarcodeFormat.QR_CODE,
                 200, 200);
+        log.info(QRCodeGenerator.class.getName() + " : Generate QRCode " + bitMatrix);
 
         Path path = FileSystems.getDefault().getPath(qrCodePath+qrCodeName);
+        log.info(QRCodeGenerator.class.getName() + " : Generate Path " + path);
+
         MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
     }
 }

@@ -4,26 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <title>Login</title>
 </head>
 <body>
-
-<div style="text-align: center;">
-    <div th:if="${param.error}" style="max-width: 200px; margin: 0 auto;">
-        <p style="color: red;">Invalid username or password.</p>
-    </div>
-    <form th:action="@{/user/login}" method="post" style="max-width: 600px; min-height: 200px; margin: 0 auto; border: 5px solid #36c1ae;" >
-        <div style="position: absolute; top: 95px; left: 550px;">
-            <p> Create your own QRCode</p>
-            <p>
-                <input type="text" id="email" name="email" placeholder="E-mail" required/>
-            </p>
-            <p>
-                <input type="password" id="password" name="password" placeholder="Password" required/>
-            </p>
-            <button type="submit">Login</button>
+    <div style="text-align: center;">
+        <div th:if="${param.error}" style="max-width: 200px; margin: 0 auto;">
+            <p style="color: red;">Invalid username or password.</p>
         </div>
-    </form>
-</div>
+        <form th:action="@{/user/login}" method="post" style="top: 10px; max-width: 600px; min-height: 400px; margin: 0 auto; border: 5px solid #36c1ae;" >
+            <div style="position: absolute; top: 95px; left: 550px;">
+                <p> Create your own QRCode</p>
+                <p>
+                    <input type="text" id="email" name="email" placeholder="E-mail" required/>
+                </p>
+                <p>
+                    <input type="password" id="password" name="password" placeholder="Password" required/>
+                </p>
+                <button type="submit">Login</button>
+            </div>
+        </form>
+    </div>
 </body>
 </html>
