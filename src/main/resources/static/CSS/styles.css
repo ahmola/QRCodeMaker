@@ -1,0 +1,15 @@
+html {
+      height: 100%;
+      width: 100%;
+}
+body {
+          height: 100%;
+          width: 100%;
+        background-image: url("backgrounds/qrmain.jpeg");
+        background-size: cover;
+        background-repeat: no-repeat;
+}
+#login {
+    background-color: white;
+    opacity: 1;
+}

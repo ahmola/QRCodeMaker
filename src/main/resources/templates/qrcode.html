@@ -15,8 +15,8 @@
                         <img th:src="@{'/qrcode/' + ${qrCodeName}}" class="card-img-top img-fluid rounded-4 rounded-top border border-success" alt="Image">
                         <div class="card-body text-center border border-top-0 border-5 border-success">
                             <h5 class="card-title" th:text="${#strings.length(qrCodeName) > 23 ? #strings.substring(qrCodeName, 0, 20) + '~.png' : qrCodeName}"></h5>
-                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                            <a href="#" class="btn btn-primary">Go somewhere</a>
+<!--                            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>-->
+                            <a href="#" class="btn btn-primary">Deliver</a>
                         </div>
                     </div>
                 </div>

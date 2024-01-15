@@ -24,6 +24,7 @@ public class QRCodeGenerator {
         qrCodePath = path;
     }
 
+    // title will be added too
     public static void generateQRCode(CustomUser customUser, String message) throws Exception {
         String qrCodeName = qrCodePath.hashCode() +
                 customUser.getFirstName() +
@@ -32,11 +33,9 @@ public class QRCodeGenerator {
                 "-QRCODE.png";
 
         BitMatrix bitMatrix = new MultiFormatWriter().encode(
-                "ID: " + customUser.getId() + "\n" +
                         "Name: " + customUser.getFirstName() + " " + customUser.getLastName() + "\n" +
                         "PhoneNumber: " + customUser.getPhoneNumber() + "\n" +
-                        "E-mail: " + customUser.getEmail() + "\n" +
-                        "Role : " + customUser.getAuthorities() + "\n\n" +
+                        "E-mail: " + customUser.getEmail() + "\n\n" +
                         "Message : " + message,
                 BarcodeFormat.QR_CODE,
                 200, 200);
