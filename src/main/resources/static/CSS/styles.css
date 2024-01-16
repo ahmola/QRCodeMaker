@@ -3,8 +3,7 @@ html {
       width: 100%;
 }
 body {
-          height: 100%;
-          width: 100%;
+        width: 100%; height: 100vh;
         background-image: url("backgrounds/qrmain.jpeg");
         background-size: cover;
         background-repeat: no-repeat;
