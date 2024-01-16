@@ -2,6 +2,7 @@ package dev.practice.QRCodeGenerator.controller.api;
 
 import dev.practice.QRCodeGenerator.dto.CustomUserDTO;
 import dev.practice.QRCodeGenerator.dto.QrCodeDTO;
+import dev.practice.QRCodeGenerator.dto.RegisterUserDTO;
 import dev.practice.QRCodeGenerator.model.CustomUser;
 import dev.practice.QRCodeGenerator.service.UserService;
 import dev.practice.QRCodeGenerator.utils.QRCodeGenerator;
@@ -74,6 +75,13 @@ public class ApiController {
         }
 
         return new ResponseEntity<>("Failed", HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/register")
+    public ResponseEntity<String> registerUser(Model model,
+                                               @ModelAttribute("registerUser")RegisterUserDTO registerUserDTO){
+
+        return new ResponseEntity<>("Registered!", HttpStatus.CREATED);
     }
 
 }

@@ -21,36 +21,24 @@ import java.util.List;
 @RequestMapping("/user")
 @Controller
 public class UserController {
-
-    @Value("${qrcode.path}")
-    private String qrCodePath;
-
-    private final ResourceLoader resourceLoader;
-    private final PasswordEncoder passwordEncoder;
-    private final UserService userService;
-
     @GetMapping("/login")
     public String userLoginForm() {
-        log.info(UserController.class.getName() + " return Login Page");
+        log.info(UserController.class.getName() + " Get Request of userLoginForm");
 
         return "newlogin";
     }
 
-    @GetMapping("/qrcode")
-    public String getQRCode(Model model) throws IOException {
-        log.info(UserController.class.getName() + " get QRCode");
+    @GetMapping("/register")
+    public String registerUserForm(){
+        log.info(this.getClass().getName() + " : Get Request of registerUserForm");
 
-        Resource directoryResource = resourceLoader.getResource("file:" + qrCodePath);
-        log.info(UserController.class.getName() + " : initiate " + directoryResource);
+        return "register";
+    }
 
-        File qrCodeDir = directoryResource.getFile();
-        log.info(UserController.class.getName() + " : find Directory " + qrCodeDir.isDirectory() + " " + qrCodeDir);
+    @GetMapping("/search")
+    public String searchUserForm(){
+        log.info(this.getClass().getName() + " : Get Request of searchUserForm");
 
-        List<String> qrCodeNames = Arrays.asList(qrCodeDir.list());
-        log.info(UserController.class.getName() + " : find Files " + qrCodeNames);
-
-        model.addAttribute("qrCodeNames", qrCodeNames);
-
-        return "qrcode";
+        return "search";
     }
 }
