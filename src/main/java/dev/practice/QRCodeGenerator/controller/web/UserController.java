@@ -33,7 +33,7 @@ public class UserController {
     public String userLoginForm() {
         log.info(UserController.class.getName() + " return Login Page");
 
-        return "login";
+        return "newlogin";
     }
 
     @GetMapping("/qrcode")

@@ -52,7 +52,7 @@ public class SecurityConfig {
                 })
                 .formLogin()
                 .usernameParameter("email")
-                .loginPage("/user/login")   // post request is also same as loginpage getmapping
+                .loginPage("/user/login")// post request is also same as loginpage getmapping
                 .permitAll()
         ;
 
