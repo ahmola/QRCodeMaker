@@ -46,9 +46,8 @@ public class SecurityConfig {
         http
                 .csrf().disable()
                 .authorizeHttpRequests(auth ->{
-                        auth.requestMatchers("/CSS/**").permitAll();
-                        auth.requestMatchers("/user/**").permitAll();
-                        auth.anyRequest().authenticated();
+                        auth.requestMatchers("/api/**").authenticated();
+                        auth.anyRequest().permitAll();
                 })
                 .formLogin()
                 .usernameParameter("email")

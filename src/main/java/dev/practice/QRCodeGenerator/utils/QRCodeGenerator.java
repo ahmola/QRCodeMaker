@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
+import java.time.LocalDateTime;
 
 @Slf4j
 @Component
@@ -34,9 +35,9 @@ public class QRCodeGenerator {
 
         BitMatrix bitMatrix = new MultiFormatWriter().encode(
                         "Name: " + customUser.getFirstName() + " " + customUser.getLastName() + "\n" +
-                        "PhoneNumber: " + customUser.getPhoneNumber() + "\n" +
                         "E-mail: " + customUser.getEmail() + "\n\n" +
-                        "Message : " + message,
+                        "Message : " + message + "\n" +
+                        "Generated at : " + LocalDateTime.now(),
                 BarcodeFormat.QR_CODE,
                 200, 200);
         log.info(QRCodeGenerator.class.getName() + " : Generate QRCode " + bitMatrix);
