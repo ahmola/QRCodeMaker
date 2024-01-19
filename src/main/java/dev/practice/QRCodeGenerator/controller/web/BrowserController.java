@@ -15,6 +15,6 @@ public class BrowserController {
 
     @GetMapping("/login")
     public String login(){
-        return "newlogin";
+        return "/grayscale/login";
     }
 }
