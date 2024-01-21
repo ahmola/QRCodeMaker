@@ -1,6 +1,7 @@
 package dev.practice.QRCodeGenerator.model;
 
 import dev.practice.QRCodeGenerator.dto.CustomUserDTO;
+import dev.practice.QRCodeGenerator.dto.RegisterUserDTO;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -39,6 +40,15 @@ public class CustomUser implements UserDetails {
         this.password = customUserDTO.getPassword();
         this.phoneNumber = customUserDTO.getPhoneNumber();
         this.role = customUserDTO.getRole();
+    }
+
+    public CustomUser(RegisterUserDTO registerUserDTO){
+        this.firstName = registerUserDTO.getFirstName();
+        this.lastName = registerUserDTO.getLastName();
+        this.email = registerUserDTO.getEmail();
+        this.password = registerUserDTO.getPassword();
+        this.phoneNumber = "";
+        this.role = Role.ROLE_USER;
     }
 
     @Override

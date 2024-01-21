@@ -1,6 +1,7 @@
 package dev.practice.QRCodeGenerator.service;
 
 import dev.practice.QRCodeGenerator.dto.CustomUserDTO;
+import dev.practice.QRCodeGenerator.dto.RegisterUserDTO;
 import dev.practice.QRCodeGenerator.model.CustomUser;
 import dev.practice.QRCodeGenerator.repository.UserRepository;
 import dev.practice.QRCodeGenerator.utils.UsernameDivider;
@@ -34,6 +35,13 @@ public class UserService implements UserDetailsService {
         customUserDTO.setPassword(passwordEncoder.encode(customUserDTO.getPassword()));
 
         return userRepository.save(new CustomUser(customUserDTO));
+    }
+
+    public CustomUser addUser(RegisterUserDTO registerUserDTO){
+        log.info(UserService.class.getName() + " : starts adding User " + registerUserDTO.toString());
+        registerUserDTO.setPassword(passwordEncoder.encode(registerUserDTO.getPassword()));
+
+        return userRepository.save(new CustomUser(registerUserDTO));
     }
 
     public List<CustomUser> findByName(String name) throws Exception {

@@ -52,8 +52,6 @@ public class SecurityConfig {
                 .formLogin()
                 .loginPage("/login")
                 .usernameParameter("email")
-                // post request is also same as loginpage getmapping
-
         ;
 
         return http.build();

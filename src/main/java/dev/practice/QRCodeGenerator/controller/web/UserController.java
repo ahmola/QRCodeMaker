@@ -21,16 +21,12 @@ public class UserController {
     @LogForController(Request = RequestMethod.GET)
     @GetMapping("/register")
     public String registerUserForm(){
-        log.info(this.getClass().getName() + " : Get Request of registerUserForm");
-
         return "register";
     }
 
     @LogForController(Request = RequestMethod.GET)
     @GetMapping("/search")
     public String searchUserForm(){
-        log.info(this.getClass().getName() + " : Get Request of searchUserForm");
-
         return "search";
     }
 }

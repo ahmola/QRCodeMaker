@@ -77,8 +77,13 @@ public class ApiController {
 
     @LogForController(Request = RequestMethod.POST)
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(Model model,
-                                               @ModelAttribute("registerUser")RegisterUserDTO registerUserDTO){
+    public ResponseEntity<String> registerUser(@ModelAttribute("registerUserDTO")RegisterUserDTO registerUserDTO)
+            throws Exception {
+        try {
+            userService.addUser(registerUserDTO);
+        }catch (Exception e){
+            throw new Exception("Something wrong... : " + e.getMessage());
+        }
 
 
         return new ResponseEntity<>("Registered!", HttpStatus.CREATED);
