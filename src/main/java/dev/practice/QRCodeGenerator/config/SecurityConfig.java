@@ -50,9 +50,10 @@ public class SecurityConfig {
                         auth.anyRequest().permitAll();
                 })
                 .formLogin()
+                .loginPage("/login")
                 .usernameParameter("email")
-                .loginPage("/user/login")// post request is also same as loginpage getmapping
-                .permitAll()
+                // post request is also same as loginpage getmapping
+
         ;
 
         return http.build();

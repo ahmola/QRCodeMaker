@@ -1,5 +1,6 @@
 package dev.practice.QRCodeGenerator.controller.api;
 
+import dev.practice.QRCodeGenerator.config.aspect.log.annotation.LogForController;
 import dev.practice.QRCodeGenerator.dto.CustomUserDTO;
 import dev.practice.QRCodeGenerator.dto.QrCodeDTO;
 import dev.practice.QRCodeGenerator.dto.RegisterUserDTO;
@@ -10,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,25 +27,24 @@ public class ApiController {
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
 
+    @LogForController(Request = RequestMethod.GET)
     @GetMapping("/findall")
     public ResponseEntity<List<CustomUser>> findAll(){
-        log.info(ApiController.class.getName() + " : gets Get Request of findAll");
         return new ResponseEntity<>(userService.findAll(), HttpStatus.FOUND);
     }
 
+    @LogForController(Request = RequestMethod.GET)
     @GetMapping("/find/{name}")
     public ResponseEntity<List<CustomUser>> findUser(
             @PathVariable(name = "name") String name) throws Exception {
-        log.info(ApiController.class.getName() + " : gets Get Request of findUser " + name);
         return new ResponseEntity<>(userService.findByName(name), HttpStatus.FOUND);
     }
 
+    @LogForController(Request = RequestMethod.POST)
     @PostMapping("/add")
     public ResponseEntity<String> addUser(
             @RequestBody CustomUserDTO customUserDTO, String message) throws Exception {
 
-        log.info(ApiController.class.getName() + " : gets Post Request of addUser " +
-                customUserDTO.getFirstName() + " " + customUserDTO.getLastName());
         CustomUser user = userService.addUser(customUserDTO);
         if(!message.isEmpty())
             log.info(ApiController.class.getName() + " : also gets message " + message);
@@ -60,9 +58,9 @@ public class ApiController {
                 HttpStatus.CREATED);
     }
 
+    @LogForController(Request = RequestMethod.POST)
     @PostMapping("/createqr")
     public ResponseEntity<String> createQRCode(@RequestBody QrCodeDTO qrCodeDTO) throws Exception {
-        log.info(ApiController.class.getName() + " : gets Post Request of createQRCode " + qrCodeDTO.getMessage());
 
         CustomUser user = userService.findByName(qrCodeDTO.getUsername()).get(0);
         if(passwordEncoder.matches(qrCodeDTO.getPassword(), user.getPassword())){
@@ -77,9 +75,11 @@ public class ApiController {
         return new ResponseEntity<>("Failed", HttpStatus.BAD_REQUEST);
     }
 
+    @LogForController(Request = RequestMethod.POST)
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(Model model,
                                                @ModelAttribute("registerUser")RegisterUserDTO registerUserDTO){
+
 
         return new ResponseEntity<>("Registered!", HttpStatus.CREATED);
     }
