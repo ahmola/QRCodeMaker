@@ -46,10 +46,12 @@ public class SecurityConfig {
         http
                 .csrf().disable()
                 .authorizeHttpRequests(auth ->{
+                        auth.requestMatchers("/api/anonymousgenerate").permitAll();
                         auth.requestMatchers("/api/**").authenticated();
                         auth.anyRequest().permitAll();
                 })
                 .formLogin()
+                .defaultSuccessUrl("/home")
                 .loginPage("/login")
                 .usernameParameter("email")
         ;

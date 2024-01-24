@@ -71,4 +71,20 @@ public class LogAspect {
         return result;
     }
 
+    @Around("@annotation(dev.practice.QRCodeGenerator.config.aspect.log.annotation.LogForUtils)")
+    public Object logForUtils(ProceedingJoinPoint proceedingJoinPoint) throws Throwable{
+        MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();
+
+        String className = methodSignature.getDeclaringType().getSimpleName();
+        String methodName = methodSignature.getMethod().getName();
+
+        log.info("{} Enter {}", className, methodName);
+
+        Object result = proceedingJoinPoint.proceed();
+
+        log.info("{} : {} Result : {}", className, methodName, result);
+
+        return result;
+    }
+
 }

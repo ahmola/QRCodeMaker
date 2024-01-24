@@ -1,6 +1,7 @@
 package dev.practice.QRCodeGenerator.controller.api;
 
 import dev.practice.QRCodeGenerator.config.aspect.log.annotation.LogForController;
+import dev.practice.QRCodeGenerator.dto.AnonymousQrCodeDTO;
 import dev.practice.QRCodeGenerator.dto.CustomUserDTO;
 import dev.practice.QRCodeGenerator.dto.QrCodeDTO;
 import dev.practice.QRCodeGenerator.dto.RegisterUserDTO;
@@ -81,12 +82,25 @@ public class ApiController {
             throws Exception {
         try {
             userService.addUser(registerUserDTO);
+            log.info(ApiController.class.getName() + " : Successfullly add User : " + registerUserDTO.getFirstName());
         }catch (Exception e){
             throw new Exception("Something wrong... : " + e.getMessage());
         }
 
-
         return new ResponseEntity<>("Registered!", HttpStatus.CREATED);
     }
 
+    @LogForController(Request =  RequestMethod.POST)
+    @PostMapping("/anonymousgenerate")
+    public ResponseEntity<String> anonymousGenerate(@ModelAttribute("content")AnonymousQrCodeDTO content)
+            throws Exception{
+        try {
+            QRCodeGenerator.generateAnonymousQRCode(content);
+            log.info(ApiController.class.getName() + " : Generate QRCode Successfully");
+
+            return new ResponseEntity<>("Generated!", HttpStatus.CREATED);
+        }catch (Exception e){
+            throw new RuntimeException("Error occurred while Generate AnonymousQRCode " + e.getMessage());
+        }
+    }
 }

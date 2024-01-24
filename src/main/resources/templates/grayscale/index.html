@@ -37,41 +37,50 @@
         <header class="masthead">
             <div class="container px-4 px-lg-5 d-flex h-100 align-items-center justify-content-center">
                 <div class="d-flex justify-content-center">
+                    <form th:action="@{/anonymousgenerate}" method="post" th:object="${content}">
+                        <div th:if="${isGenerated}">
+                            <div class="alert alert-success">Success!</div>
+                        </div>
+
                     <div class="text-center">
                         <h1 class="mx-auto my-0 text-uppercase">QRCode</h1>
                         <h2 class="text-white-50 mx-auto mt-2 mb-5">Create your own QRCode with special meanings</h2>
+
                         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#generatorModal">
                             Get Started
                         </button>
-                        <div class="modal fade" id="generatorModal" tabindex="-1" role="dialog" aria-labelledby="generatorModalLabel" aria-hidden="true">
-                            <div class="modal-dialog" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title" id="generatorModalTitleLabel">Generate QRCode</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form>
-                                            <div class="form-group">
-                                                <label for="generator-name" class="col-form-label">Generator:</label>
-                                                <input type="text" class="form-control" id="generator-name">
-                                            </div>
-                                            <div class="form-group">
-                                                <label for="message" class="col-form-label">Message:</label>
-                                                <textarea class="form-control" id="message"></textarea>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-primary">Generate</button>
+
+                            <div class="modal fade" id="generatorModal" tabindex="-1" role="dialog" aria-labelledby="generatorModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="generatorModalTitleLabel">Generate QRCode</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form>
+                                                <div class="form-group">
+                                                    <label for="sendTo" class="col-form-label">Send to:</label>
+                                                    <input type="text" class="form-control" id="sendTo" th:field="*{receiverName}" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="message" class="col-form-label">Message:</label>
+                                                    <textarea class="form-control" id="message" th:field="*{message}" required></textarea>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="submit" class="btn btn-primary">Generate</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
+
                         <div class="w-100 d-block mb-3"></div>
                         <a class="btn btn-primary" href="/login">Login</a>
                     </div>
+                    </form>
                 </div>
             </div>
         </header>
