@@ -9,8 +9,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @NoArgsConstructor
 @Data
@@ -33,6 +36,9 @@ public class CustomUser implements UserDetails {
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
+    @OneToMany(mappedBy = "customUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<QRCode> qrCodes;
+
     public CustomUser(CustomUserDTO customUserDTO){
         this.firstName = customUserDTO.getFirstName();
         this.lastName = customUserDTO.getLastName();
@@ -47,7 +53,6 @@ public class CustomUser implements UserDetails {
         this.lastName = registerUserDTO.getLastName();
         this.email = registerUserDTO.getEmail();
         this.password = registerUserDTO.getPassword();
-        this.phoneNumber = "";
         this.role = Role.ROLE_USER;
     }
 

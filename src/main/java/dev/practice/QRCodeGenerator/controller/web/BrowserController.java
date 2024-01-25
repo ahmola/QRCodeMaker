@@ -3,7 +3,9 @@ package dev.practice.QRCodeGenerator.controller.web;
 import dev.practice.QRCodeGenerator.config.aspect.log.annotation.LogForController;
 import dev.practice.QRCodeGenerator.dto.AnonymousQrCodeDTO;
 import dev.practice.QRCodeGenerator.dto.RegisterUserDTO;
+import dev.practice.QRCodeGenerator.service.UserService;
 import dev.practice.QRCodeGenerator.utils.QRCodeGenerator;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,9 +15,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.nio.file.Path;
+import java.util.List;
+
 @Slf4j
+@RequiredArgsConstructor
 @Controller
 public class BrowserController {
+
+    private final UserService userService;
 
     @LogForController(Request = RequestMethod.GET)
     @GetMapping("/home")
@@ -31,7 +39,9 @@ public class BrowserController {
             @ModelAttribute("content")AnonymousQrCodeDTO content,
             RedirectAttributes redirectAttributes) throws Exception {
         try {
-            QRCodeGenerator.generateAnonymousQRCode(content);
+            Path path = QRCodeGenerator.generateAnonymousQRCode(content);
+            userService.addQRCodesByUsername(content.getReceiverName(), List.of(path.toString()));
+
             redirectAttributes.addFlashAttribute("isGenerated", true);
             log.info(BrowserController.class.getName() + " : Generate " + content);
 

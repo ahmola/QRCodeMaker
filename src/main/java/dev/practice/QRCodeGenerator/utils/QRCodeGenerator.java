@@ -7,7 +7,10 @@ import com.google.zxing.common.BitMatrix;
 import dev.practice.QRCodeGenerator.config.aspect.log.annotation.LogForUtils;
 import dev.practice.QRCodeGenerator.dto.AnonymousQrCodeDTO;
 import dev.practice.QRCodeGenerator.model.CustomUser;
+import dev.practice.QRCodeGenerator.service.UserService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -28,54 +31,63 @@ public class QRCodeGenerator {
     }
 
     @LogForUtils
-    public static void generateAnonymousQRCode(AnonymousQrCodeDTO content) throws Exception{
-        String qrCodeName = qrCodePath.hashCode() +
-                "Annonymous" +
-                content.getMessage().hashCode() +
-                "-QRCODE.png";
+    public static Path generateAnonymousQRCode(AnonymousQrCodeDTO content) throws Exception{
+        try {
+            String qrCodeName = qrCodePath.hashCode() +
+                    "Annonymous" +
+                    content.getMessage().hashCode() +
+                    "-QRCODE.png";
 
-        BitMatrix bitMatrix = new MultiFormatWriter().encode(
-                "Name: Anonymous\n\n" +
-                        "Message : " + content.getMessage() + "\n\n" +
-                        "Generated at : " + LocalDateTime.now(),
-                BarcodeFormat.QR_CODE,
-                200, 200);
+            BitMatrix bitMatrix = new MultiFormatWriter().encode(
+                    "Name: Anonymous\n\n" +
+                            "Message : " + content.getMessage() + "\n\n" +
+                            "Generated at : " + LocalDateTime.now(),
+                    BarcodeFormat.QR_CODE,
+                    200, 200);
+            log.info("Generate Anonymous QRCode Complete with Message : " + content.getMessage());
 
-        log.info("Generate Anonymous QRCode Complete with Message : " + content.getMessage());
+            Path path = FileSystems.getDefault().getPath(qrCodePath + qrCodeName);
+            log.info(QRCodeGenerator.class.getName() + " Generate Path : " + path);
 
-        /*
-        * Have to add user's QRCode Repository!
-        * */
-        log.info(QRCodeGenerator.class.getName()+" Send to User : " + content.getReceiverName());
+            MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
+            log.info(QRCodeGenerator.class.getName() + " QRCode Created at " + path);
 
-        Path path = FileSystems.getDefault().getPath(qrCodePath+qrCodeName);
-        log.info(QRCodeGenerator.class.getName() + " Generate Path : " + path);
-
-        MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
+            return path;
+        }catch (Exception e){
+            throw new RuntimeException("Something goes wrong in generateAnonymousQRCode() with Error Message"
+                    + e.getMessage());
+        }
     }
 
     // title will be added too
     @LogForUtils
-    public static void generateQRCode(CustomUser customUser, String message) throws Exception {
+    public static Path generateQRCode(CustomUser customUser, String message) throws Exception {
+        try{
+            String qrCodeName = qrCodePath.hashCode() +
+                    customUser.getFirstName() +
+                    customUser.getId() +
+                    message.hashCode() +
+                    "-QRCODE.png";
 
-        String qrCodeName = qrCodePath.hashCode() +
-                customUser.getFirstName() +
-                customUser.getId() +
-                message.hashCode() +
-                "-QRCODE.png";
+            BitMatrix bitMatrix = new MultiFormatWriter().encode(
+                            "Name: " + customUser.getFirstName() + " " + customUser.getLastName() + "\n" +
+                            "E-mail: " + customUser.getEmail() + "\n\n" +
+                            "Message : " + message + "\n\n" +
+                            "Generated at : " + LocalDateTime.now(),
+                    BarcodeFormat.QR_CODE,
+                    200, 200);
+            log.info(QRCodeGenerator.class.getName() + " : Generate QRCode " + bitMatrix);
 
-        BitMatrix bitMatrix = new MultiFormatWriter().encode(
-                        "Name: " + customUser.getFirstName() + " " + customUser.getLastName() + "\n" +
-                        "E-mail: " + customUser.getEmail() + "\n\n" +
-                        "Message : " + message + "\n\n" +
-                        "Generated at : " + LocalDateTime.now(),
-                BarcodeFormat.QR_CODE,
-                200, 200);
-        log.info(QRCodeGenerator.class.getName() + " : Generate QRCode " + bitMatrix);
+            Path path = FileSystems.getDefault().getPath(qrCodePath+qrCodeName);
+            log.info(QRCodeGenerator.class.getName() + " : Generate Path " + path);
 
-        Path path = FileSystems.getDefault().getPath(qrCodePath+qrCodeName);
-        log.info(QRCodeGenerator.class.getName() + " : Generate Path " + path);
+            MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
+            log.info(QRCodeGenerator.class.getName() + " : Save QRCode at " + path);
 
-        MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
+            return path;
+        }catch (Exception e){
+            throw new RuntimeException("Something goes wrong in generateQRCode()"
+                    + " with Error Message " + e.getMessage());
+        }
     }
 }

@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.Path;
 import java.util.List;
 
 @Slf4j
@@ -31,10 +32,19 @@ public class UserService implements UserDetailsService {
     }
 
     public CustomUser addUser(CustomUserDTO customUserDTO){
-        log.info(UserService.class.getName() + " : starts adding User " + customUserDTO.toString());
+        log.info(UserService.class.getName() + " : starts adding User " + customUserDTO);
         customUserDTO.setPassword(passwordEncoder.encode(customUserDTO.getPassword()));
 
         return userRepository.save(new CustomUser(customUserDTO));
+    }
+
+    public CustomUser addUser(CustomUserDTO customUserDTO, List<String> paths){
+        log.info(UserService.class.getName() + " : starts adding User " + customUserDTO +" with " + paths);
+        customUserDTO.setPassword(passwordEncoder.encode(customUserDTO.getPassword()));
+        CustomUser user = new CustomUser(customUserDTO);
+        user.getQrCodes().addAll(paths);
+
+        return userRepository.save(user);
     }
 
     public CustomUser addUser(RegisterUserDTO registerUserDTO){
@@ -44,8 +54,14 @@ public class UserService implements UserDetailsService {
         return userRepository.save(new CustomUser(registerUserDTO));
     }
 
+    public boolean addQRCodesByUsername(String username, List<String> paths) throws Exception {
+        log.info(UserService.class.getName() + " : adds QRCode to User : " + username);
+        findByName(username).get(0).getQrCodes().addAll(paths);
+        return true;
+    }
+
     public List<CustomUser> findByName(String name) throws Exception {
-        log.info(UserService.class.getName() + " : starts find User with Name" + name);
+        log.info(UserService.class.getName() + " : starts find User with Name : " + name);
 
         List<String> fullName = UsernameDivider.divideUsername(name);
 
