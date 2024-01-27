@@ -40,7 +40,7 @@ public class BrowserController {
             RedirectAttributes redirectAttributes) throws Exception {
         try {
             Path path = QRCodeGenerator.generateAnonymousQRCode(content);
-            userService.addQRCodesByUsername(content.getReceiverName(), List.of(path.toString()));
+            userService.addQRCodesByUsername(content.getReceiverName(), List.of(path));
 
             redirectAttributes.addFlashAttribute("isGenerated", true);
             log.info(BrowserController.class.getName() + " : Generate " + content);

@@ -48,7 +48,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth ->{
                         auth.requestMatchers("/api/register").permitAll();
                         auth.requestMatchers("/api/anonymousgenerate").permitAll();
-                        auth.requestMatchers("/api/**").authenticated();
+//                        auth.requestMatchers("/api/**").authenticated();
                         auth.anyRequest().permitAll();
                 })
                 .formLogin()

@@ -1,5 +1,6 @@
 package dev.practice.QRCodeGenerator.model;
 
+import com.fasterxml.jackson.annotation.*;
 import dev.practice.QRCodeGenerator.dto.CustomUserDTO;
 import dev.practice.QRCodeGenerator.dto.RegisterUserDTO;
 import jakarta.persistence.*;
@@ -9,8 +10,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -36,7 +35,8 @@ public class CustomUser implements UserDetails {
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "customUser", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "customUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JsonManagedReference
     private List<QRCode> qrCodes;
 
     public CustomUser(CustomUserDTO customUserDTO){

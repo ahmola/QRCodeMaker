@@ -3,6 +3,8 @@ package dev.practice.QRCodeGenerator.service;
 import dev.practice.QRCodeGenerator.dto.CustomUserDTO;
 import dev.practice.QRCodeGenerator.dto.RegisterUserDTO;
 import dev.practice.QRCodeGenerator.model.CustomUser;
+import dev.practice.QRCodeGenerator.model.QRCode;
+import dev.practice.QRCodeGenerator.repository.QRCodeRepository;
 import dev.practice.QRCodeGenerator.repository.UserRepository;
 import dev.practice.QRCodeGenerator.utils.UsernameDivider;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -24,6 +27,7 @@ public class UserService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final QRCoderService qrCoderService;
 
     public List<CustomUser> findAll(){
         log.info(UserService.class.getName() + " : starts finding all Users");
@@ -38,11 +42,13 @@ public class UserService implements UserDetailsService {
         return userRepository.save(new CustomUser(customUserDTO));
     }
 
-    public CustomUser addUser(CustomUserDTO customUserDTO, List<String> paths){
+    public CustomUser addUser(CustomUserDTO customUserDTO, List<Path> paths){
         log.info(UserService.class.getName() + " : starts adding User " + customUserDTO +" with " + paths);
         customUserDTO.setPassword(passwordEncoder.encode(customUserDTO.getPassword()));
         CustomUser user = new CustomUser(customUserDTO);
-        user.getQrCodes().addAll(paths);
+
+        List<QRCode> qrCodes = qrCoderService.save(paths, user);
+        user.getQrCodes().addAll(qrCodes);
 
         return userRepository.save(user);
     }
@@ -54,9 +60,12 @@ public class UserService implements UserDetailsService {
         return userRepository.save(new CustomUser(registerUserDTO));
     }
 
-    public boolean addQRCodesByUsername(String username, List<String> paths) throws Exception {
+    public boolean addQRCodesByUsername(String username, List<Path> paths) throws Exception {
         log.info(UserService.class.getName() + " : adds QRCode to User : " + username);
-        findByName(username).get(0).getQrCodes().addAll(paths);
+        CustomUser customUser = findByName(username).get(0);
+        List<QRCode> qrCodes = qrCoderService.save(paths, customUser);
+        customUser.getQrCodes().addAll(qrCodes);
+
         return true;
     }
 

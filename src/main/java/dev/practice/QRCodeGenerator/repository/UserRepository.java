@@ -18,5 +18,6 @@ public interface UserRepository extends JpaRepository<CustomUser, Long> {
             @Param(value = "firstName") String firstName,
             @Param(value = "lastName") String lastName);
 
-    List<CustomUser> findByEmail(String email);
+    @Query("SELECT u FROM user u WHERE u.email = :email")
+    List<CustomUser> findByEmail(@Param("email") String email);
 }

@@ -6,6 +6,8 @@ import dev.practice.QRCodeGenerator.dto.CustomUserDTO;
 import dev.practice.QRCodeGenerator.dto.QrCodeDTO;
 import dev.practice.QRCodeGenerator.dto.RegisterUserDTO;
 import dev.practice.QRCodeGenerator.model.CustomUser;
+import dev.practice.QRCodeGenerator.model.QRCode;
+import dev.practice.QRCodeGenerator.service.QRCoderService;
 import dev.practice.QRCodeGenerator.service.UserService;
 import dev.practice.QRCodeGenerator.utils.QRCodeGenerator;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -27,12 +30,19 @@ import java.util.List;
 public class ApiController {
 
     private final PasswordEncoder passwordEncoder;
+    private final QRCoderService qrCoderService;
     private final UserService userService;
 
     @LogForController(Request = RequestMethod.GET)
     @GetMapping("/findall")
     public ResponseEntity<List<CustomUser>> findAll(){
         return new ResponseEntity<>(userService.findAll(), HttpStatus.FOUND);
+    }
+
+    @LogForController(Request = RequestMethod.GET)
+    @GetMapping("/findbyemail/{email}")
+    public ResponseEntity<CustomUser> findbyemail(@PathVariable(name = "email") String email) throws Exception {
+        return new ResponseEntity<>(userService.findByEmail(email), HttpStatus.FOUND);
     }
 
     @LogForController(Request = RequestMethod.GET)
@@ -45,8 +55,20 @@ public class ApiController {
     @LogForController(Request = RequestMethod.GET)
     @GetMapping("/find/{name}/qrcode")
     public ResponseEntity<List<String>> findUserQRCode(@PathVariable(name = "name") String name) throws Exception{
-        List<String> qrCodes =  userService.findByName(name).get(0).getQrCodes();
+
+        List<String> qrCodes =  userService.findByName(name).get(0).getQrCodes().stream()
+                .map(QRCode::getPath)
+                .map(Path::getFileName)
+                .map(Path::toString)
+                .collect(Collectors.toList());
         log.info("name's QRCode : " + qrCodes);
+        return new ResponseEntity<>(qrCodes, HttpStatus.FOUND);
+    }
+
+    @LogForController(Request = RequestMethod.GET)
+    @GetMapping("/find/qrcodes")
+    public ResponseEntity<List<QRCode>> findAllQRCodes(){
+        List<QRCode> qrCodes = qrCoderService.findAll();
         return new ResponseEntity<>(qrCodes, HttpStatus.FOUND);
     }
 
@@ -64,7 +86,7 @@ public class ApiController {
         Path path = QRCodeGenerator.generateQRCode(user, message);
 
         log.info(ApiController.class.getName() + " : save QRCode in UserRepository in " + path);
-        userService.addUser(customUserDTO, List.of(path.toString()));
+        userService.addUser(customUserDTO, List.of(path));
 
         return new ResponseEntity<>(
                 user + " is created at " + LocalDateTime.now(),
@@ -82,7 +104,7 @@ public class ApiController {
             Path path = QRCodeGenerator.generateQRCode(user, qrCodeDTO.getMessage());
             log.info("Generate QRCode");
 
-            userService.addQRCodesByUsername(qrCodeDTO.getUsername(), List.of(path.toString()));
+            userService.addQRCodesByUsername(qrCodeDTO.getUsername(), List.of(path));
             log.info("Add Path to UserRepository");
 
             return new ResponseEntity<>("Success Create QRCode with Message!", HttpStatus.CREATED);
@@ -112,7 +134,7 @@ public class ApiController {
             Path path = QRCodeGenerator.generateAnonymousQRCode(content);
             log.info(ApiController.class.getName() + " : Generate QRCode Successfully");
 
-            userService.addQRCodesByUsername(content.getReceiverName(), List.of(path.toString()));
+            userService.addQRCodesByUsername(content.getReceiverName(), List.of(path));
             log.info(ApiController.class.getName() + " : add QRCode to User : " + content.getReceiverName());
 
             return new ResponseEntity<>("Generated!", HttpStatus.CREATED);
