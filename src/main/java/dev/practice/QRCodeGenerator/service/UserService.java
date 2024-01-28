@@ -1,6 +1,7 @@
 package dev.practice.QRCodeGenerator.service;
 
 import dev.practice.QRCodeGenerator.dto.CustomUserDTO;
+import dev.practice.QRCodeGenerator.dto.LoginDTO;
 import dev.practice.QRCodeGenerator.dto.RegisterUserDTO;
 import dev.practice.QRCodeGenerator.model.CustomUser;
 import dev.practice.QRCodeGenerator.model.QRCode;
@@ -10,6 +11,7 @@ import dev.practice.QRCodeGenerator.utils.UsernameDivider;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.WrongClassException;
+import org.modelmapper.ModelMapper;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,6 +28,7 @@ import java.util.List;
 public class UserService implements UserDetailsService {
 
     private final PasswordEncoder passwordEncoder;
+    private final ModelMapper modelMapper;
     private final UserRepository userRepository;
     private final QRCoderService qrCoderService;
 
@@ -95,9 +98,9 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         log.info(UserService.class.getName() + " starts authenticate : " + email);
 
-        CustomUser user = userRepository.findByEmail(email).get(0);
+        List<CustomUser> user = userRepository.findByEmail(email);
         log.info("Found User for Authentication : " + user);
 
-        return user;
+        return modelMapper.map(user.get(0), LoginDTO.class);
     }
 }
