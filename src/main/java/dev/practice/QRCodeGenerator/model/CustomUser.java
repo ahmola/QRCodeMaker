@@ -6,7 +6,9 @@ import dev.practice.QRCodeGenerator.dto.CustomUserDTO;
 import dev.practice.QRCodeGenerator.dto.RegisterUserDTO;
 import dev.practice.QRCodeGenerator.utils.CustomUserEntitySerializer;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,7 +19,10 @@ import java.util.List;
 import java.util.Objects;
 
 
-// do not Use Lombok!!! when using @OneToMany or other Relationships. Especially @ToString annotation
+// When using @OneToMany or other Relationships. Especially @ToString annotation.
+// @Getter and @Setter are okay so far...
+
+@Getter@Setter
 @JsonSerialize(using = CustomUserEntitySerializer.class)
 @NoArgsConstructor
 @Entity(name = "user")
@@ -65,42 +70,15 @@ public class CustomUser implements UserDetails {
         return Collections.singletonList(new SimpleGrantedAuthority(this.role.toString()));
     }
 
-    public Long getId(){
-        return this.id;
-    }
-
-    public String getRole(){
-        return this.role.toString();
-    }
-
     @Override
     public String getPassword() {
         return this.password;
     }
 
-    public String getFirstName(){
-        return this.firstName;
-    }
-
-    public String getLastName(){
-        return this.lastName;
-    }
 
     @Override
     public String getUsername() {
         return this.firstName + " " + this.lastName;
-    }
-
-    public String getEmail(){
-        return this.email;
-    }
-
-    public String getPhoneNumber(){
-        return this.phoneNumber;
-    }
-
-    public List<QRCode> getQrCodes(){
-        return this.qrCodes;
     }
 
     @Override
@@ -122,31 +100,6 @@ public class CustomUser implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
 
     @Override
     public boolean equals(Object o) {

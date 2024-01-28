@@ -3,7 +3,9 @@ package dev.practice.QRCodeGenerator.model;
 import com.fasterxml.jackson.annotation.*;
 import dev.practice.QRCodeGenerator.utils.PathConverter;
 import jakarta.persistence.*;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.nio.file.Path;
@@ -13,6 +15,7 @@ import java.util.Objects;
 @JsonIdentityInfo(
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id")
+@Getter@Setter
 @NoArgsConstructor
 @Entity
 public class QRCode {
@@ -34,39 +37,6 @@ public class QRCode {
 
     @CreationTimestamp
     private Timestamp createTime;
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Path getPath() {
-        return path;
-    }
-
-    public void setPath(Path path) {
-        this.path = path;
-    }
-
-    public CustomUser getCustomUser() {
-        return customUser;
-    }
-
-    public void setCustomUser(CustomUser customUser) {
-        this.customUser = customUser;
-    }
-
-    public Timestamp getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Timestamp createTime) {
-        this.createTime = createTime;
-    }
 
     @Override
     public String toString() {
