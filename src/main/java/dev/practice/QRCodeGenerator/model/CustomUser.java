@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Objects;
 
 
-// do not Use Lombok!!! when using @OneToMany or other Relationships
+// do not Use Lombok!!! when using @OneToMany or other Relationships. Especially @ToString annotation
 @JsonSerialize(using = CustomUserEntitySerializer.class)
 @NoArgsConstructor
 @Entity(name = "user")
@@ -147,19 +147,6 @@ public class CustomUser implements UserDetails {
         this.role = role;
     }
 
-    @Override
-    public String toString() {
-        return "CustomUser{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                ", role=" + role +
-                ", qrCodes=" + qrCodes +
-                '}';
-    }
 
     @Override
     public boolean equals(Object o) {

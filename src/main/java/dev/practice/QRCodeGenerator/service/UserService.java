@@ -98,9 +98,9 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         log.info(UserService.class.getName() + " starts authenticate : " + email);
 
-        List<CustomUser> user = userRepository.findByEmail(email);
+        CustomUser user = userRepository.findByEmail(email).get(0);
         log.info("Found User for Authentication : " + user);
 
-        return modelMapper.map(user.get(0), LoginDTO.class);
+        return user;
     }
 }
