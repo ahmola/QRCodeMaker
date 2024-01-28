@@ -1,6 +1,7 @@
 package dev.practice.QRCodeGenerator.controller.web;
 
 import dev.practice.QRCodeGenerator.config.aspect.log.annotation.LogForController;
+import dev.practice.QRCodeGenerator.controller.api.ApiController;
 import dev.practice.QRCodeGenerator.dto.AnonymousQrCodeDTO;
 import dev.practice.QRCodeGenerator.dto.RegisterUserDTO;
 import dev.practice.QRCodeGenerator.service.UserService;
@@ -55,6 +56,21 @@ public class BrowserController {
     @GetMapping("/login")
     public String login(){
         return "/grayscale/login";
+    }
+
+    @LogForController(Request =  RequestMethod.POST)
+    @PostMapping("/register")
+    public String register(@ModelAttribute(name = "registerUserDTO")RegisterUserDTO registerUserDTO,
+                           RedirectAttributes redirectAttributes) throws Exception{
+        try {
+            userService.addUser(registerUserDTO);
+            log.info(BrowserController.class.getName() + " : Successfully add User : " + registerUserDTO.getFirstName());
+            redirectAttributes.addFlashAttribute("isRegistered", true);
+        }catch (Exception e){
+            throw new RuntimeException("Something goes wrong... " + e.getMessage());
+        }
+
+        return "redirect:/home";
     }
 
 }

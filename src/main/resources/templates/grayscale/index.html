@@ -41,6 +41,9 @@
                         <div th:if="${isGenerated}">
                             <div class="alert alert-success">Success!</div>
                         </div>
+                        <div th:if="${isRegistered}">
+                            <div class="alert alert-success">Registered!</div>
+                        </div>
 
                     <div class="text-center">
                         <h1 class="mx-auto my-0 text-uppercase">QRCode</h1>
@@ -156,7 +159,7 @@
                         <!-- To make this form functional, sign up at-->
                         <!-- https://startbootstrap.com/solution/contact-forms-->
                         <!-- to get an API token!-->
-                        <form class="form-signup" id="contactForm" data-sb-form-api-token="API_TOKEN" th:action="@{/api/register}" method="post" th:object="${registerUserDTO}">
+                        <form class="form-signup" id="contactForm" data-sb-form-api-token="API_TOKEN" th:action="@{/register}" method="post" th:object="${registerUserDTO}">
                             <!-- Email address input-->
                             <div class="input-group-newsletter justify-content-center grid gap-3">
                                 <div class="p-3 g-col-1"><input class="form-control" id="firstName" type="text" name="firstName" th:field="*{firstName}" placeholder="Enter firstName..." aria-label="Enter firstName..." data-sb-validations="required,firstName" /></div>

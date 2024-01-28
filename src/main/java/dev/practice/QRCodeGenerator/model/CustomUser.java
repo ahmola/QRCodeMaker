@@ -44,7 +44,8 @@ public class CustomUser implements UserDetails {
     @Enumerated(value = EnumType.STRING)
     private Role role;
 
-    @OneToMany(mappedBy = "customUser", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "customUser", cascade = CascadeType.ALL,
+            orphanRemoval = true, fetch = FetchType.EAGER)
     @JsonManagedReference
     private List<QRCode> qrCodes;
 
@@ -106,11 +107,21 @@ public class CustomUser implements UserDetails {
         if (this == o) return true;
         if (!(o instanceof CustomUser)) return false;
         CustomUser user = (CustomUser) o;
-        return getId().equals(user.getId()) && Objects.equals(getFirstName(), user.getFirstName()) && Objects.equals(getLastName(), user.getLastName()) && Objects.equals(getEmail(), user.getEmail()) && Objects.equals(getPassword(), user.getPassword()) && Objects.equals(getPhoneNumber(), user.getPhoneNumber()) && getRole() == user.getRole() && Objects.equals(getQrCodes(), user.getQrCodes());
+        return getId().equals(user.getId()) &&
+                Objects.equals(
+                    getFirstName(), user.getFirstName()) &&
+                    Objects.equals(getLastName(), user.getLastName()) &&
+                    Objects.equals(getEmail(), user.getEmail()) &&
+                    Objects.equals(getPassword(), user.getPassword()) &&
+                    Objects.equals(getPhoneNumber(), user.getPhoneNumber()) &&
+                    getRole() == user.getRole() &&
+                    Objects.equals(getQrCodes(), user.getQrCodes());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getFirstName(), getLastName(), getEmail(), getPassword(), getPhoneNumber(), getRole(), getQrCodes());
+        return Objects.hash(
+                getId(), getFirstName(), getLastName(), getEmail(),
+                getPassword(), getPhoneNumber(), getRole(), getQrCodes());
     }
 }
