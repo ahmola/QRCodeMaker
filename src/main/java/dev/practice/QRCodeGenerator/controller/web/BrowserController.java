@@ -73,4 +73,10 @@ public class BrowserController {
         return "redirect:/home";
     }
 
+    @LogForController(Request = RequestMethod.GET)
+    @GetMapping("/user")
+    public String user(Model model){
+        return "/grayscale/user";
+    }
+
 }
