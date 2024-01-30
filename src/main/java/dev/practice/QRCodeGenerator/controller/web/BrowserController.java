@@ -4,6 +4,8 @@ import dev.practice.QRCodeGenerator.config.aspect.log.annotation.LogForControlle
 import dev.practice.QRCodeGenerator.controller.api.ApiController;
 import dev.practice.QRCodeGenerator.dto.AnonymousQrCodeDTO;
 import dev.practice.QRCodeGenerator.dto.RegisterUserDTO;
+import dev.practice.QRCodeGenerator.model.CustomUser;
+import dev.practice.QRCodeGenerator.model.QRCode;
 import dev.practice.QRCodeGenerator.service.UserService;
 import dev.practice.QRCodeGenerator.utils.QRCodeGenerator;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +19,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.nio.file.Path;
+import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -75,7 +79,17 @@ public class BrowserController {
 
     @LogForController(Request = RequestMethod.GET)
     @GetMapping("/user")
-    public String user(Model model){
+    public String user(Model model, Principal principal) throws Exception {
+
+        CustomUser user = userService.findByName(principal.getName()).get(0);
+        List<String> qrcodes = user.getQrCodes().stream()
+                .map(QRCode::getPath)
+                .map(Path::getFileName)
+                .map(Path::toString).toList();
+        log.info(BrowserController.class.getName() + " : Send " +
+                    user.getUsername() + " with : " + qrcodes);
+        model.addAttribute("QRCodes", qrcodes);
+
         return "/grayscale/user";
     }
 
