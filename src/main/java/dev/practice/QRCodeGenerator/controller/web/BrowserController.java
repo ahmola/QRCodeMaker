@@ -3,6 +3,7 @@ package dev.practice.QRCodeGenerator.controller.web;
 import dev.practice.QRCodeGenerator.config.aspect.log.annotation.LogForController;
 import dev.practice.QRCodeGenerator.controller.api.ApiController;
 import dev.practice.QRCodeGenerator.dto.AnonymousQrCodeDTO;
+import dev.practice.QRCodeGenerator.dto.LoginPageQrCodeDTO;
 import dev.practice.QRCodeGenerator.dto.RegisterUserDTO;
 import dev.practice.QRCodeGenerator.model.CustomUser;
 import dev.practice.QRCodeGenerator.model.QRCode;
@@ -20,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.nio.file.Path;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -82,13 +84,18 @@ public class BrowserController {
     public String user(Model model, Principal principal) throws Exception {
 
         CustomUser user = userService.findByName(principal.getName()).get(0);
-        List<String> qrcodes = user.getQrCodes().stream()
-                .map(QRCode::getPath)
-                .map(Path::getFileName)
-                .map(Path::toString).toList();
+
+        List<LoginPageQrCodeDTO> userQrCodes = new ArrayList<>();
+        for (QRCode qrcode : user.getQrCodes()){
+            LoginPageQrCodeDTO userQrCode = new LoginPageQrCodeDTO(
+                    qrcode.getPath().getFileName().toString(),
+                    qrcode.getCreateTime().toString());
+            userQrCodes.add(userQrCode);
+        }
+
         log.info(BrowserController.class.getName() + " : Send " +
-                    user.getUsername() + " with : " + qrcodes);
-        model.addAttribute("QRCodes", qrcodes);
+                    user.getUsername() + " with : " + userQrCodes);
+        model.addAttribute("QRCodes", userQrCodes);
 
         return "/grayscale/user";
     }
