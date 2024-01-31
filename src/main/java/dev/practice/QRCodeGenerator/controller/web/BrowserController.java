@@ -5,6 +5,7 @@ import dev.practice.QRCodeGenerator.controller.api.ApiController;
 import dev.practice.QRCodeGenerator.dto.AnonymousQrCodeDTO;
 import dev.practice.QRCodeGenerator.dto.LoginPageQrCodeDTO;
 import dev.practice.QRCodeGenerator.dto.RegisterUserDTO;
+import dev.practice.QRCodeGenerator.dto.SendQrCodeDTO;
 import dev.practice.QRCodeGenerator.model.CustomUser;
 import dev.practice.QRCodeGenerator.model.QRCode;
 import dev.practice.QRCodeGenerator.service.UserService;
@@ -85,6 +86,7 @@ public class BrowserController {
 
         CustomUser user = userService.findByName(principal.getName()).get(0);
 
+        // have to add qrcode decoder to show details
         List<LoginPageQrCodeDTO> userQrCodes = new ArrayList<>();
         for (QRCode qrcode : user.getQrCodes()){
             LoginPageQrCodeDTO userQrCode = new LoginPageQrCodeDTO(
