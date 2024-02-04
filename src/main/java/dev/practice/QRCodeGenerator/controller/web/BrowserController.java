@@ -35,7 +35,11 @@ public class BrowserController {
 
     @LogForController(Request = RequestMethod.GET)
     @GetMapping("/home")
-    public String home(Model model){
+    public String home(Model model, Principal principal){
+        if(principal == null)
+            model.addAttribute("isLogin", false);
+        else
+            model.addAttribute("isLogin", true);
         model.addAttribute("registerUserDTO", new RegisterUserDTO());
         model.addAttribute("content", new AnonymousQrCodeDTO());
         return "/grayscale/index";
@@ -83,6 +87,8 @@ public class BrowserController {
     @LogForController(Request = RequestMethod.GET)
     @GetMapping("/user")
     public String user(Model model, Principal principal) throws Exception {
+
+        model.addAttribute("content", new AnonymousQrCodeDTO());
 
         CustomUser user = userService.findByName(principal.getName()).get(0);
 

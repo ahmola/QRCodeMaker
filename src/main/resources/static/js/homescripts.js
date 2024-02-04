@@ -1,3 +1,7 @@
+function showModal(){
+    var modal = $('#generatorModal');
+    modal.modal('show');
+}
 $("#signup").click(function() {
 $("#first").fadeOut("fast", function() {
 $("#second").fadeIn("fast");
