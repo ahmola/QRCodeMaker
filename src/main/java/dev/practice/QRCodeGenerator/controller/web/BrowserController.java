@@ -91,6 +91,7 @@ public class BrowserController {
         for (QRCode qrcode : user.getQrCodes()){
             LoginPageQrCodeDTO userQrCode = new LoginPageQrCodeDTO(
                     qrcode.getPath().getFileName().toString(),
+                    QRCodeGenerator.decodeQrCode(qrcode.getPath()),
                     qrcode.getCreateTime().toString());
             userQrCodes.add(userQrCode);
         }
