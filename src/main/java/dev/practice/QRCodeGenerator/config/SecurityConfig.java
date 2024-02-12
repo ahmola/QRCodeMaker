@@ -56,6 +56,8 @@ public class SecurityConfig {
                 .defaultSuccessUrl("/user")
                 .loginPage("/login")
                 .usernameParameter("email")
+                .and()
+                .logout(Customizer.withDefaults())
         ;
 
         return http.build();
