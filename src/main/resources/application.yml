@@ -4,11 +4,11 @@ qrcode:
 server:
   port: 9000
 
-#logging:
-#  level:
-#    org:
-#      springframework:
-#        security: TRACE
+logging:
+  level:
+    org:
+      springframework:
+        security: TRACE
 
 spring:
   datasource:
@@ -17,7 +17,13 @@ spring:
     username: "prac"
     password: 1234
     initialization-mode: always
-
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 849215442642-u6b8pnpe4sdrf92k6iribsr2u3djd0lb.apps.googleusercontent.com
+            client-secret: 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
   jpa:
     hibernate:
       ddl-auto: update
