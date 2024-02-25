@@ -11,6 +11,10 @@ java {
 	sourceCompatibility = '17'
 }
 
+bootJar{
+	archiveFileName = 'spring-qrcode-generator.jar'
+}
+
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
